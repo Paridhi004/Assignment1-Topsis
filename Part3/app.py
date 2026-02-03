@@ -12,7 +12,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 EMAIL_ADDRESS = "paridhirastogi85@gmail.com"
-APP_PASSWORD = "grvcdqnqqmoofhje" 
+APP_PASSWORD = "Your App Password Here"  
 
 def send_email_background(receiver, file_path):
     """
