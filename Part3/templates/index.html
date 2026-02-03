@@ -1,57 +1,245 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOPSIS Web Service</title>
-     <style>
+    <style>
         body {
             height: 100vh;
             margin: 0;
             display: flex;
-            justify-content: center;   /* horizontal center */
-            align-items: center;       /* vertical center */
-            background-color: #f4f6f8;
-            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
         }
 
         .container {
             background: white;
-            padding: 30px 60px 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.15);
-            width: 400px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 450px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        /* Sample Data Section Styles */
+        .sample-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            font-size: 0.9em;
+        }
+
+        .sample-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sample-title {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .download-link {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 0.85em;
+            cursor: pointer;
+            border: 1px solid #007BFF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .download-link:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .data-preview {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 0.85em;
+            background: white;
+        }
+
+        .data-preview th, .data-preview td {
+            border: 1px solid #dee2e6;
+            padding: 6px;
             text-align: center;
         }
 
-        input, button {
-            width: 100%;
-            padding: 8px;
-            margin-top: 10px;
+        .data-preview th {
+            background-color: #e9ecef;
         }
 
-        button {
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+            margin-left: 2px;
+        }
+
+        input[type="text"], 
+        input[type="email"], 
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button.submit-btn {
             cursor: pointer;
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 16px;
-            margin-left: 10px;
-            width: 50%;
+            font-weight: 600;
+            padding: 12px;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        button.submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .helper-text {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: -3px;
         }
     </style>
 </head>
 <body>
-    
+
 <div class="container">
     <h2>TOPSIS Calculator</h2>
 
+    <div class="sample-section">
+        <div class="sample-header">
+            <span class="sample-title">Expected CSV Format</span>
+            <a class="download-link" onclick="downloadSample()">Download Sample</a>
+        </div>
+        <table class="data-preview">
+            <thead>
+                <tr>
+                    <th>Fund Name</th>
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th>P3</th>
+                    <th>...</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>M1</td>
+                    <td>0.69</td>
+                    <td>0.48</td>
+                    <td>3.9</td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td>M2</td>
+                    <td>0.89</td>
+                    <td>0.79</td>
+                    <td>5.1</td>
+                    <td>...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <input type="text" name="weights" placeholder="Weights (e.g. 1,1,1,1,1)" required>
-        <input type="text" name="impacts" placeholder="Impacts (e.g. +,+,-,+,+)" required>
-        <input type="email" name="email" placeholder="Email ID" required>
-        <button type="submit">Submit</button>
+        <div class="input-group">
+            <label for="file">Upload CSV File</label>
+            <input type="file" id="file" name="file" accept=".csv" required>
+        </div>
+
+        <div class="input-group">
+            <label for="weights">Weights</label>
+            <input type="text" id="weights" name="weights" placeholder="e.g. 1,1,1,1,1" required>
+        </div>
+
+        <div class="input-group">
+            <label for="impacts">Impacts</label>
+            <input type="text" id="impacts" name="impacts" placeholder="e.g. +,+,-,+,+" required>
+        </div>
+
+        <div class="input-group">
+            <label for="email">Email Notification</label>
+            <input type="email" id="email" name="email" placeholder="yourname@example.com" required>
+            <span class="helper-text">Result will be sent to this email</span>
+        </div>
+
+        <button type="submit" class="submit-btn">Calculate Rank</button>
     </form>
 </div>
+
+<script>
+    function downloadSample() {
+        // Content of the sample CSV file
+        const csvContent = "Fund Name,P1,P2,P3,P4,P5\n" +
+                           "M1,0.69,0.48,3.9,68.1,18.29\n" +
+                           "M2,0.89,0.79,5.1,58.7,16.37\n" +
+                           "M3,0.81,0.66,6.2,44.1,12.94\n" +
+                           "M4,0.81,0.66,3.2,53.0,14.42\n" +
+                           "M5,0.68,0.46,6.8,65.6,18.39";
+
+        // Create a blob and trigger download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", "sample_data.csv");
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
 </body>
 </html>
