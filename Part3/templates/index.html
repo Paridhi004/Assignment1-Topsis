@@ -116,7 +116,7 @@
             padding: 10px;
             border: 1px solid #ced4da;
             border-radius: 6px;
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            box-sizing: border-box; 
             font-size: 14px;
             transition: border-color 0.2s;
         }
@@ -218,7 +218,7 @@
 
 <script>
     function downloadSample() {
-        // Content of the sample CSV file
+        
         const csvContent = "Fund Name,P1,P2,P3,P4,P5\n" +
                            "M1,0.69,0.48,3.9,68.1,18.29\n" +
                            "M2,0.89,0.79,5.1,58.7,16.37\n" +
@@ -226,7 +226,7 @@
                            "M4,0.81,0.66,3.2,53.0,14.42\n" +
                            "M5,0.68,0.46,6.8,65.6,18.39";
 
-        // Create a blob and trigger download
+        
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
