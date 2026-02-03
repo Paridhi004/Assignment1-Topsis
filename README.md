@@ -49,8 +49,7 @@ topsis("data.csv", "1,1,1,1", "+,-,+,+", "output.csv")
 
 ## Part 3: Web Service
 A user-friendly web interface is deployed to handle TOPSIS calculations without writing code. The results are emailed directly to the user.
-### Live Demo: 
-[Link to your Render/Vercel App]
+
 ### Features:
 1. Upload CSV: Drag-and-drop interface.
 2. Custom Inputs: Easy input for Weights and Impacts.
