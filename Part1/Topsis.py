@@ -8,11 +8,11 @@ def error(msg):
     sys.exit(1)
 
 def topsis(input_file, weights, impacts, output_file):
-    # ---------- File check ----------
+    
     if not os.path.exists(input_file):
         error("Input file not found")
 
-    # ---------- Read CSV ----------
+    
     try:
         df = pd.read_csv(input_file)
     except Exception:
@@ -23,7 +23,7 @@ def topsis(input_file, weights, impacts, output_file):
 
     data = df.iloc[:, 1:]
 
-    # ---------- Numeric check ----------
+    
     if not np.issubdtype(data.dtypes.values[0], np.number):
         error("Columns from 2nd to last must be numeric")
 
@@ -32,7 +32,7 @@ def topsis(input_file, weights, impacts, output_file):
     except ValueError:
         error("Non-numeric value found in criteria columns")
 
-    # ---------- Parse weights & impacts ----------
+    
     weights = weights.split(",")
     impacts = impacts.split(",")
 
@@ -48,14 +48,14 @@ def topsis(input_file, weights, impacts, output_file):
         if i not in ["+", "-"]:
             error("Impacts must be either + or -")
 
-    # ---------- Normalization ----------
+    
     norm = np.sqrt((data ** 2).sum())
     normalized = data / norm
 
-    # ---------- Weighted normalization ----------
+    
     weighted = normalized * weights
 
-    # ---------- Ideal best & worst ----------
+   
     ideal_best = []
     ideal_worst = []
 
@@ -70,18 +70,18 @@ def topsis(input_file, weights, impacts, output_file):
     ideal_best = np.array(ideal_best)
     ideal_worst = np.array(ideal_worst)
 
-    # ---------- Distance calculation ----------
+   
     dist_best = np.sqrt(((weighted - ideal_best) ** 2).sum(axis=1))
     dist_worst = np.sqrt(((weighted - ideal_worst) ** 2).sum(axis=1))
 
-    # ---------- Topsis score ----------
+    
     score = (dist_worst / (dist_best + dist_worst))*100
 
-    # ---------- Rank ----------
+    
     df["Topsis Score"] = score
     df["Rank"] = df["Topsis Score"].rank(ascending=False, method="dense").astype(int)
 
-    # ---------- Output ----------
+    
     df.to_csv(output_file, index=False)
     print("TOPSIS analysis completed successfully")
 
