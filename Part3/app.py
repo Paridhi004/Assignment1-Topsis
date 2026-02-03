@@ -38,7 +38,7 @@ def send_email_background(receiver, file_path):
             server.login(EMAIL_ADDRESS, APP_PASSWORD)
             server.send_message(msg)
         
-        print(f"Email successfully sent to {receiver}") # Check your server logs to see this
+        print(f"Email successfully sent to {receiver}") 
         
     except Exception as e:
         print(f"Failed to send email: {e}")
@@ -55,7 +55,7 @@ def index():
             if not file or not weights or not impacts or not email:
                 return "All fields are required"
 
-            # 1. Create a unique filename so multiple users don't overwrite each other
+            
             unique_id = str(uuid.uuid4().hex)
             input_filename = f"input_{unique_id}.csv"
             output_filename = f"output_{unique_id}.csv"
@@ -63,12 +63,11 @@ def index():
             input_path = os.path.join(UPLOAD_FOLDER, input_filename)
             output_path = os.path.join(UPLOAD_FOLDER, output_filename)
 
-            # 2. Save and Run TOPSIS
+            
             file.save(input_path)
             topsis(input_path, weights, impacts, output_path)
 
-            # 3. START BACKGROUND THREAD (The Magic Fix)
-            # This tells Python: "Go send this email, but let me continue immediately."
+           
             email_thread = threading.Thread(target=send_email_background, args=(email, output_path))
             email_thread.start()
 
